@@ -1,5 +1,6 @@
 package com.quantitymeasurement.service;
 
+import com.quantitymeasurement.exception.MeasurementServiceException;
 import com.quantitymeasurement.model.Units;
 import org.junit.jupiter.api.Test;
 
@@ -82,4 +83,13 @@ public class MeasurementServiceTest {
         assertEquals(1000,convertedValue,0.0);
     }
 
+    @Test
+    public void given1KgAndLitreUnit_whenDifferentTypeUnits_ShouldThroughException() {
+        Units units = new Units(KG,LITRE,1.0);
+        try {
+            double convertedValue = measurementService.convertTo("WEIGHT", units);
+        } catch (MeasurementServiceException e) {
+            assertEquals(MeasurementServiceException.ExceptionType.INCOMPATIBLE_UNITS,e.type);
+        }
+    }
 }

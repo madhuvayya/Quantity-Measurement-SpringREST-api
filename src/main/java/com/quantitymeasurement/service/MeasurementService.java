@@ -3,6 +3,7 @@ package com.quantitymeasurement.service;
 import com.quantitymeasurement.enums.BaseUnits;
 import com.quantitymeasurement.exception.MeasurementServiceException;
 import com.quantitymeasurement.model.Units;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -51,7 +52,7 @@ public class MeasurementService {
 
         if(firstUnit.equals(BaseUnits.INCH))
             return round(firstUnitValue * firstUnit.value * 1000.0 ) / 1000.0;
-        return firstUnitValue * ( firstUnit.value / secondUnit.value);
+        return round(firstUnitValue * ( firstUnit.value / secondUnit.value) * 1000.0 ) / 1000.0 ;
     }
 
     private double temperatureConversion(BaseUnits firstUnit, BaseUnits secondUnit, double firstUnitValue) {
@@ -84,14 +85,14 @@ public class MeasurementService {
         BaseUnits[] baseUnits = mainUnits.get(measurement.toLowerCase());
 
         if(baseUnits == null)
-            throw new MeasurementServiceException(MeasurementServiceException.ExceptionType.NOT_FOUND,
+            throw new MeasurementServiceException(HttpStatus.NOT_FOUND,
                     measurement+" is not found in the measurements");
 
         long count1 = Arrays.stream(baseUnits).filter(units -> units.equals(firstUnit)).count();
         long count2 = Arrays.stream(baseUnits).filter(units -> units.equals(secondUnit)).count();
 
         if(count1 != 1 || count2 != 1)
-            throw new MeasurementServiceException(MeasurementServiceException.ExceptionType.INCOMPATIBLE_UNITS
+            throw new MeasurementServiceException(HttpStatus.BAD_REQUEST
                     ,firstUnit+" , "+ secondUnit +" are incompatible unit types");
     }
 }

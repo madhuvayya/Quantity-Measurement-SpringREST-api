@@ -1,15 +1,13 @@
 package com.quantitymeasurement.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class MeasurementServiceException extends RuntimeException {
 
-    public enum ExceptionType {
-        INCOMPATIBLE_UNITS,
-        NOT_FOUND
-    }
-    public ExceptionType type;
+    private final HttpStatus httpStatus;
 
-    public MeasurementServiceException(ExceptionType type,String message) {
+    public MeasurementServiceException(HttpStatus httpStatus, String message) {
         super(message);
-        this.type = type;
+        this.httpStatus = httpStatus;
     }
 }

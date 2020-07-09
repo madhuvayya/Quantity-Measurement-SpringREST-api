@@ -28,14 +28,15 @@ public class MeasurementService {
         mainUnits.put("weight",weight);
         mainUnits.put("volume",volume);
         mainUnits.put("temperature",temperature);
+
     }
 
-    public String getMainUnits() {
-        return null;
+    public String[] getMainUnits() {
+        return mainUnits.keySet().toArray(new String[0]);
     }
 
-    public String getSubUnits(String main_unit) {
-        return null;
+    public BaseUnits[] getSubUnits(String mainUnit) {
+        return mainUnits.get(mainUnit.toLowerCase());
     }
 
     public double convertTo(String mainUnit, Units units) {
@@ -49,8 +50,8 @@ public class MeasurementService {
         }
 
         if(firstUnit.equals(BaseUnits.INCH))
-            return round(firstUnitValue * firstUnit.value * 100.0) / 100.0;
-        return round(firstUnitValue * firstUnit.value / secondUnit.value * 100.0) / 100.0;
+            return round(firstUnitValue * firstUnit.value * 1000.0 ) / 1000.0;
+        return firstUnitValue * ( firstUnit.value / secondUnit.value);
     }
 
     private double temperatureConversion(BaseUnits firstUnit, BaseUnits secondUnit, double firstUnitValue) {

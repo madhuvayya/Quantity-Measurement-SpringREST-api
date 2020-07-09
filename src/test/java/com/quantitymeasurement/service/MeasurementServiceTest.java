@@ -5,8 +5,7 @@ import com.quantitymeasurement.model.Units;
 import org.junit.jupiter.api.Test;
 
 import static com.quantitymeasurement.enums.BaseUnits.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MeasurementServiceTest {
 
@@ -47,6 +46,19 @@ public class MeasurementServiceTest {
         assertEquals(1093.61,convertedValue,0.0);
     }
 
+    @Test
+    public void given1FEET_whenConvertedYARD_shouldReturnCorrectValue() {
+        Units units = new Units(FEET,YARD,1.0);
+        double convertedValue = measurementService.convertTo("Length", units);
+        assertEquals(0.333,convertedValue,0.0);
+    }
+
+    @Test
+    public void given1INCH_whenConvertedFEET_shouldReturnCorrectValue() {
+        Units units = new Units(INCH,FEET,1.0);
+        double convertedValue = measurementService.convertTo("Length", units);
+        assertEquals(0.08,convertedValue,0.0);
+    }
 
     @Test
     public void given1CentimetreAndInchUnit_whenConvertedToInch_ShouldReturn1() {

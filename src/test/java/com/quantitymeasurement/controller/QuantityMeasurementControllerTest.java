@@ -2,6 +2,7 @@ package com.quantitymeasurement.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quantitymeasurement.enums.BaseUnits;
 import com.quantitymeasurement.model.Units;
 import com.quantitymeasurement.service.MeasurementService;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-
-import static com.quantitymeasurement.enums.BaseUnits.FEET;
-import static com.quantitymeasurement.enums.BaseUnits.INCH;
+import static com.quantitymeasurement.enums.BaseUnits.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class QuantityMeasurementControllerTest {
+public class QuantityMeasurementControllerTest<length> {
 
     @Autowired
     MockMvc mockMvc;
@@ -38,20 +36,14 @@ public class QuantityMeasurementControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    enum MainUnits {
-        LENGTH, VOLUME, WEIGHT, TEMPERATURE
-    }
-
-    enum Length{
-        INCH,FEET,CENTIMETRE,YARD,KM
-    }
+    BaseUnits[] length = { INCH,FEET,CENTIMETRE,YARD,KM};
 
     @Test
     void givenDefaultUrl_shouldReturnMainUnits() throws Exception {
 
-        String mainUnits = Arrays.toString(MainUnits.values());
+        String[] listOfMainUnits = {"LENGTH","VOLUME","WEIGHT","TEMPERATURE"};
 
-        when(measurementService.getMainUnits()).thenReturn(mainUnits);
+        when(measurementService.getMainUnits()).thenReturn(listOfMainUnits);
 
         mockMvc.perform(get("/quantity-measurement/main-units"))
                 .andDo(print())
@@ -68,9 +60,7 @@ public class QuantityMeasurementControllerTest {
     @Test
     void givenMainUnitInPathVariable_shouldReturnSubUnits() throws Exception {
 
-        String subUnits = Arrays.toString(Length.values());
-
-        when(measurementService.getSubUnits(any())).thenReturn(subUnits);
+        when(measurementService.getSubUnits(any())).thenReturn(length);
 
         mockMvc.perform(get("/quantity-measurement/main-units/LENGTH"))
                 .andDo(print())

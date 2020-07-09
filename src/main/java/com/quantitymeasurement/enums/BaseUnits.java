@@ -2,10 +2,8 @@ package com.quantitymeasurement.enums;
 
 public enum BaseUnits {
 
-    /**
-     * Length units
-     * Inch is the base unit
-     */
+    // Length units
+    // Inch is the base unit
     FEET(12.0),
     YARD(36.0),
     INCH(1.0),

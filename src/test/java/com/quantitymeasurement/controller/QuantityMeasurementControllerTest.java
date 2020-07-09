@@ -37,16 +37,18 @@ public class QuantityMeasurementControllerTest {
         LENGTH, VOLUME, WEIGHT, TEMPERATURE
     }
 
-    private String getMainUnits() {
-        return Arrays.toString(MainUnits.values());
+    enum Length{
+        INCH,FEET,CENTIMETRE,YARD,KM
     }
 
     @Test
-    void givenDefaultUrl_shouldReturnWelcome() throws Exception {
+    void givenDefaultUrl_shouldReturnMainUnits() throws Exception {
 
-        when(measurementService.getMainUnits()).thenReturn(getMainUnits());
+        String mainUnits = Arrays.toString(MainUnits.values());
 
-        mockMvc.perform(get("/quantity-measurement/home"))
+        when(measurementService.getMainUnits()).thenReturn(mainUnits);
+
+        mockMvc.perform(get("/quantity-measurement/main-units"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(4)))
@@ -58,5 +60,24 @@ public class QuantityMeasurementControllerTest {
         verify(measurementService, times(1)).getMainUnits();
     }
 
+    @Test
+    void givenMainUnitInPathVariable_shouldReturnSubUnits() throws Exception {
+
+        String subUnits = Arrays.toString(Length.values());
+
+        when(measurementService.getSubUnits(any())).thenReturn(subUnits);
+
+        mockMvc.perform(get("/quantity-measurement/main-units/LENGTH"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(5)))
+                .andExpect(jsonPath("$[0]",is("INCH")))
+                .andExpect(jsonPath("$[1]",is("FEET")))
+                .andExpect(jsonPath("$[2]",is("CENTIMETRE")))
+                .andExpect(jsonPath("$[3]",is("YARD")))
+                .andExpect(jsonPath("$[4]",is("KM")));
+
+        verify(measurementService, times(1)).getSubUnits(any());
+    }
 
 }

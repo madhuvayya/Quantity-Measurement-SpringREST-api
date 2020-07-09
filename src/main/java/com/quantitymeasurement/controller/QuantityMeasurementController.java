@@ -6,6 +6,8 @@ import com.quantitymeasurement.service.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,11 +25,18 @@ public class QuantityMeasurementController {
 
     ObjectMapper objectMapper;
 
-    @RequestMapping("/home")
+    @RequestMapping("/main-units")
     public ResponseEntity<String> getMainUnits() throws JsonProcessingException {
         String mainUnits = measurementService.getMainUnits();
         String s = objectMapper.writeValueAsString(mainUnits);
         return new ResponseEntity<String>(mainUnits, HttpStatus.OK);
+    }
+
+    @GetMapping("/main-units/{main_unit}")
+    public ResponseEntity<String> getSubUnits(@PathVariable String main_unit) throws JsonProcessingException {
+        String subUnits = measurementService.getSubUnits(main_unit);
+        String jsonString = objectMapper.writeValueAsString(subUnits);
+        return new ResponseEntity<String>(subUnits,HttpStatus.OK);
     }
 
 

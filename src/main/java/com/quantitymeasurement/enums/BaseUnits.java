@@ -22,15 +22,17 @@ public enum BaseUnits {
     // Kg is the base unit
     KG(1.0),
     GRAMS(0.001),
-    TONNE(1000.0);
+    TONNE(1000.0),
+
+    // Temperature is the unit type
+    // Fahrenheit is the base unit
+    FAHRENHEIT(1.0),
+    CELSIUS(33.8),
+    KELVIN(-457.87);
 
     public double value;
 
     BaseUnits(double value) {
         this.value = value;
-    }
-
-    public double getConversionValue(){
-        return value;
     }
 }

@@ -87,9 +87,48 @@ public class MeasurementServiceTest {
     public void given1KgAndLitreUnit_whenDifferentTypeUnits_ShouldThroughException() {
         Units units = new Units(KG,LITRE,1.0);
         try {
-            double convertedValue = measurementService.convertTo("WEIGHT", units);
+            measurementService.convertTo("WEIGHT", units);
         } catch (MeasurementServiceException e) {
             assertEquals(MeasurementServiceException.ExceptionType.INCOMPATIBLE_UNITS,e.type);
         }
+    }
+
+    @Test
+    public void givenMeasurement_whenWrong_ShouldThroughException() {
+        Units units = new Units(KG,LITRE,1.0);
+        try {
+            measurementService.convertTo("PRESSURE", units);
+        } catch (MeasurementServiceException e) {
+            assertEquals(MeasurementServiceException.ExceptionType.NOT_FOUND,e.type);
+        }
+    }
+
+
+    @Test
+    public void given1KelvinAndCelsiusUnit_whenConvertedToCelsius_ShouldReturnValueInCelsius() {
+        Units units = new Units(KELVIN,CELSIUS,1.0);
+        double convertedValue = measurementService.convertTo("TEMPERATURE", units);
+        assertEquals(-272.15,convertedValue,0.0);
+    }
+
+    @Test
+    public void given1CelsiusAndKelvinUnit_whenConvertedToFahrenheit_ShouldReturnValueInKelvin() {
+        Units units = new Units(CELSIUS,KELVIN,1.0);
+        double convertedValue = measurementService.convertTo("TEMPERATURE", units);
+        assertEquals(274.15,convertedValue,0.0);
+    }
+
+    @Test
+    public void given1FahrenheitAndCelsiusUnit_whenConvertedToCelsius_ShouldReturnValueInCelsius() {
+        Units units = new Units(FAHRENHEIT,CELSIUS,1.0);
+        double convertedValue = measurementService.convertTo("TEMPERATURE", units);
+        assertEquals(-17.222,convertedValue,0.0);
+    }
+
+    @Test
+    public void given1KelvinAndFahrenheitUnit_whenConvertedToFahrenheit_ShouldReturnValueInFahrenheit() {
+        Units units = new Units(KELVIN,FAHRENHEIT,2.0);
+        double convertedValue = measurementService.convertTo("TEMPERATURE", units);
+        assertEquals(-456.07,convertedValue,0.0);
     }
 }

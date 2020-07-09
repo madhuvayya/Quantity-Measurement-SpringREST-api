@@ -1,5 +1,6 @@
 package com.quantitymeasurement.service;
 
+import com.quantitymeasurement.enums.BaseUnits;
 import com.quantitymeasurement.model.Units;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class MeasurementService {
     }
 
     public double convertTo(String mainUnit, Units units) {
-        return 0;
+        BaseUnits firstUnit = units.getFirstUnit();
+        return units.getFirstUnitValue() * firstUnit.getConversionValue();
     }
 }

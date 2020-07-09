@@ -9,4 +9,8 @@ public enum BaseUnits {
     BaseUnits(double value) {
         this.value = value;
     }
+
+    public double getConversionValue(){
+        return value;
+    }
 }

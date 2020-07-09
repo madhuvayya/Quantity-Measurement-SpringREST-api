@@ -16,19 +16,19 @@ public class QuantityMeasurementController {
     private final MeasurementService measurementService;
 
     @Autowired
-    public QuantityMeasurementController(MeasurementService measurementService) {
+    public QuantityMeasurementController(MeasurementService measurementService, ObjectMapper objectMapper) {
         this.measurementService = measurementService;
+        this.objectMapper = objectMapper;
     }
+
+    ObjectMapper objectMapper;
 
     @RequestMapping("/home")
     public ResponseEntity<String> getMainUnits() throws JsonProcessingException {
         String mainUnits = measurementService.getMainUnits();
-        String s = this.convertToJsonString(mainUnits);
+        String s = objectMapper.writeValueAsString(mainUnits);
         return new ResponseEntity<String>(mainUnits, HttpStatus.OK);
     }
 
-    public String convertToJsonString(Object object) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
-    }
+
 }

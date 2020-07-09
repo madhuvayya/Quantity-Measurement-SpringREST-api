@@ -18,6 +18,9 @@ public class MeasurementService {
 
     public double convertTo(String mainUnit, Units units) {
         BaseUnits firstUnit = units.getFirstUnit();
-        return units.getFirstUnitValue() * firstUnit.getConversionValue();
+        BaseUnits secondUnit = units.getSecondUnit();
+        if(firstUnit.equals(BaseUnits.INCH))
+            return Math.round(units.getFirstUnitValue() * firstUnit.value * 100.0) / 100.0;
+        return Math.round(units.getFirstUnitValue() * firstUnit.value / secondUnit.value * 100.0) / 100.0;
     }
 }

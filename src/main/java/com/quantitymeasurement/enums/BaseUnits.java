@@ -12,7 +12,7 @@ public enum BaseUnits {
     CENTIMETRE(0.393701),
     KM(39370.1);
 
-    private final double value;
+    public double value;
 
     BaseUnits(double value) {
         this.value = value;

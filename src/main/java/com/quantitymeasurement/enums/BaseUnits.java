@@ -10,7 +10,13 @@ public enum BaseUnits {
     YARD(36.0),
     INCH(1.0),
     CENTIMETRE(0.393701),
-    KM(39370.1);
+    KM(39370.1),
+
+    // Volume is the unit type
+    // Litre is the base unit
+    LITRE(1.0),
+    MILLILITRE(0.001),
+    GALLON(3.78);
 
     public double value;
 

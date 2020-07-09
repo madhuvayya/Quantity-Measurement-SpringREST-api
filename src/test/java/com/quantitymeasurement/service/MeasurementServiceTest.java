@@ -48,9 +48,38 @@ public class MeasurementServiceTest {
 
 
     @Test
-    public void given1CentimetreInchUnit_whenConvertedToInch_ShouldReturn1() {
+    public void given1CentimetreAndInchUnit_whenConvertedToInch_ShouldReturn1() {
         Units units = new Units(CENTIMETRE,INCH,1.0);
         double convertedValue = measurementService.convertTo("LENGTH", units);
         assertNotEquals(1,convertedValue,0.0);
     }
+
+    @Test
+    public void given1LitreAndMillilitreUnit_whenConvertedToMillilitre_ShouldReturn1000() {
+        Units units = new Units(LITRE,MILLILITRE,1.0);
+        double convertedValue = measurementService.convertTo("VOLUME", units);
+        assertEquals(1000,convertedValue,0.0);
+    }
+
+    @Test
+    public void given1GallonAndLitreUnit_whenConvertedToLitre_ShouldReturnCorrectValue() {
+        Units units = new Units(GALLON,LITRE,1.0);
+        double convertedValue = measurementService.convertTo("VOLUME", units);
+        assertNotEquals(10,convertedValue,0.0);
+    }
+
+    @Test
+    public void given500MillilitreAndLitreUnit_whenConvertedToLitre_ShouldReturnHalfLiter() {
+        Units units = new Units(MILLILITRE,LITRE,500.0);
+        double convertedValue = measurementService.convertTo("VOLUME", units);
+        assertEquals(0.5,convertedValue,0.0);
+    }
+
+    @Test
+    public void given1KgAndGramUnit_whenConvertedToGram_ShouldReturn1000() {
+        Units units = new Units(KG,GRAMS,1.0);
+        double convertedValue = measurementService.convertTo("WEIGHT", units);
+        assertEquals(1000,convertedValue,0.0);
+    }
+
 }

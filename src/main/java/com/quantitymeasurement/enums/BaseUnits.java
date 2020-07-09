@@ -16,7 +16,13 @@ public enum BaseUnits {
     // Litre is the base unit
     LITRE(1.0),
     MILLILITRE(0.001),
-    GALLON(3.78);
+    GALLON(3.78),
+
+    // Weight is the unit type
+    // Kg is the base unit
+    KG(1.0),
+    GRAMS(0.001),
+    TONNE(1000.0);
 
     public double value;
 

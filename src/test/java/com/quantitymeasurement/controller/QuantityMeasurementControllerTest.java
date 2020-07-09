@@ -2,20 +2,25 @@ package com.quantitymeasurement.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quantitymeasurement.model.Units;
 import com.quantitymeasurement.service.MeasurementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static com.quantitymeasurement.enums.BaseUnits.FEET;
+import static com.quantitymeasurement.enums.BaseUnits.INCH;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,4 +85,22 @@ public class QuantityMeasurementControllerTest {
         verify(measurementService, times(1)).getSubUnits(any());
     }
 
+    @Test
+    void givenUnits_whenConverted_shouldReturnSubUnits() throws Exception {
+
+        Units units = new Units(FEET,INCH,1.0);
+
+        String asString = objectMapper.writeValueAsString(units);
+
+        when(measurementService.convertTo(any(),any())).thenReturn(3.0);
+
+        mockMvc.perform(post("/quantity-measurement/main-units/LENGTH/convert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asString))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",is(3.0)));
+
+        verify(measurementService, times(1)).convertTo(any(),any());
+    }
 }

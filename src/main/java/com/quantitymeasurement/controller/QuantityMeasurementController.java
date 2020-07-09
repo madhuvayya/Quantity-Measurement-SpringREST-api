@@ -2,14 +2,12 @@ package com.quantitymeasurement.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quantitymeasurement.model.Units;
 import com.quantitymeasurement.service.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/quantity-measurement")
@@ -39,5 +37,11 @@ public class QuantityMeasurementController {
         return new ResponseEntity<String>(subUnits,HttpStatus.OK);
     }
 
+    @PostMapping("/main-units/{main_unit}/convert")
+    public ResponseEntity<String> convertUnit(@PathVariable String main_unit,@RequestBody Units units) throws JsonProcessingException {
+        double convertedValue = measurementService.convertTo(main_unit,units);
+        String jsonString = objectMapper.writeValueAsString(convertedValue);
+        return new ResponseEntity<String>(jsonString,HttpStatus.OK);
+    }
 
 }

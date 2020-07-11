@@ -43,7 +43,7 @@ public class QuantityMeasurementControllerTest<length> {
 
         String[] listOfMainUnits = {"LENGTH","VOLUME","WEIGHT","TEMPERATURE"};
 
-        when(measurementService.getMainUnits()).thenReturn(listOfMainUnits);
+        when(measurementService.getMeasurements()).thenReturn(listOfMainUnits);
 
         mockMvc.perform(get("/quantity-measurement/main-units"))
                 .andDo(print())
@@ -54,7 +54,7 @@ public class QuantityMeasurementControllerTest<length> {
                 .andExpect(jsonPath("$[2]",is("WEIGHT")))
                 .andExpect(jsonPath("$[3]",is("TEMPERATURE")));
 
-        verify(measurementService, times(1)).getMainUnits();
+        verify(measurementService, times(1)).getMeasurements();
     }
 
     @Test

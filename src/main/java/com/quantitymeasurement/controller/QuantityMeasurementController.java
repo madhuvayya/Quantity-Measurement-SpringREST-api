@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quantitymeasurement.enums.BaseUnits;
 import com.quantitymeasurement.model.Units;
 import com.quantitymeasurement.service.MeasurementService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/quantity-measurement")
+@Api
 public class QuantityMeasurementController {
 
     private final MeasurementService measurementService;
@@ -26,23 +30,28 @@ public class QuantityMeasurementController {
 
     ObjectMapper objectMapper;
 
-    @RequestMapping("/main-units")
-    public ResponseEntity<String> getMainUnits() throws JsonProcessingException {
-        String[] mainUnits = measurementService.getMainUnits();
-        String jsonString = objectMapper.writeValueAsString(mainUnits);
+    @RequestMapping("/measurements")
+    @ApiOperation(value = "returns array of measurements")
+    public ResponseEntity<String> getMeasurements() throws JsonProcessingException {
+        String[] measurements = measurementService.getMeasurements();
+        String jsonString = objectMapper.writeValueAsString(measurements);
         return new ResponseEntity<>(jsonString,HttpStatus.OK);
     }
 
-    @GetMapping("/main-units/{main_unit}")
-    public ResponseEntity<String> getSubUnits(@PathVariable String main_unit) throws JsonProcessingException {
-        BaseUnits[] subUnits = measurementService.getSubUnits(main_unit);
+    @GetMapping("/measurements/{measurement}")
+    @ApiOperation(value = "returns array of sub units with respect to provided main unit",notes="example- /measurements/LENGTH")
+    public ResponseEntity<String> getSubUnits(
+            @ApiParam(value = "measurement", example = "LENGTH")
+            @PathVariable String measurement) throws JsonProcessingException {
+        BaseUnits[] subUnits = measurementService.getSubUnits(measurement);
         String jsonString = objectMapper.writeValueAsString(subUnits);
         return new ResponseEntity<String>(Arrays.toString(subUnits),HttpStatus.OK);
     }
 
-    @PostMapping("/main-units/{main_unit}/convert")
-    public ResponseEntity<String> convertUnit(@PathVariable String main_unit,@RequestBody Units units) throws JsonProcessingException {
-        double convertedValue = measurementService.convertTo(main_unit,units);
+    @PostMapping("/measurements/{measurement}/convert")
+    @ApiOperation(value = "converts from one unit to an other unit of same type")
+    public ResponseEntity<String> convertUnit(@PathVariable String measurement,@RequestBody Units units) throws JsonProcessingException {
+        double convertedValue = measurementService.convertTo(measurement,units);
         String jsonString = objectMapper.writeValueAsString(convertedValue);
         return new ResponseEntity<String>(jsonString,HttpStatus.OK);
     }

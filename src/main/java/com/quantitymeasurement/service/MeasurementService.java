@@ -16,7 +16,7 @@ import static java.lang.Math.round;
 @Service
 public class MeasurementService {
 
-    Map<String, BaseUnits[]> mainUnits;
+    Map<String, BaseUnits[]> measurements;
 
     BaseUnits[] length = {FEET,INCH,KM,CENTIMETRE,YARD};
     BaseUnits[] volume = {LITRE,GALLON,MILLILITRE};
@@ -24,32 +24,33 @@ public class MeasurementService {
     BaseUnits[] temperature = {FAHRENHEIT,CELSIUS,KELVIN};
 
     public MeasurementService() {
-        mainUnits = new HashMap<>();
-        mainUnits.put("length",length);
-        mainUnits.put("weight",weight);
-        mainUnits.put("volume",volume);
-        mainUnits.put("temperature",temperature);
+        measurements = new HashMap<>();
+        measurements.put("length",length);
+        measurements.put("weight",weight);
+        measurements.put("volume",volume);
+        measurements.put("temperature",temperature);
 
     }
 
-    public String[] getMainUnits() {
-        return mainUnits.keySet().toArray(new String[0]);
+    public String[] getMeasurements() {
+        return measurements.keySet().toArray(new String[0]);
     }
 
-    public BaseUnits[] getSubUnits(String mainUnit) {
-        return mainUnits.get(mainUnit.toLowerCase());
+    public BaseUnits[] getSubUnits(String measurement) {
+        this.checkMeasurementExists(measurement);
+        return this.measurements.get(measurement.toLowerCase());
     }
 
-    public double convertTo(String mainUnit, Units units) {
+    public double convertTo(String measurement, Units units) {
         BaseUnits firstUnit = units.getFirstUnit();
         BaseUnits secondUnit = units.getSecondUnit();
         double firstUnitValue = units.getFirstUnitValue();
 
-        this.checkSameType(mainUnit,firstUnit,secondUnit);
-        if(mainUnit.toLowerCase().equals("temperature")){
+        this.checkSameType(measurement,firstUnit,secondUnit);
+
+        if(measurement.toLowerCase().equals("temperature")){
              return round(this.temperatureConversion(firstUnit, secondUnit, firstUnitValue) * 1000.0) / 1000.0;
         }
-
         if(firstUnit.equals(BaseUnits.INCH))
             return round(firstUnitValue * firstUnit.value * 1000.0 ) / 1000.0;
         return round(firstUnitValue * ( firstUnit.value / secondUnit.value) * 1000.0 ) / 1000.0 ;
@@ -82,17 +83,22 @@ public class MeasurementService {
     }
 
     private void checkSameType(String measurement,BaseUnits firstUnit,BaseUnits secondUnit) {
-        BaseUnits[] baseUnits = mainUnits.get(measurement.toLowerCase());
+        BaseUnits[] baseUnits = measurements.get(measurement.toLowerCase());
 
-        if(baseUnits == null)
-            throw new MeasurementServiceException(HttpStatus.NOT_FOUND,
-                    measurement+" is not found in the measurements");
-
+        this.checkMeasurementExists(measurement);
         long count1 = Arrays.stream(baseUnits).filter(units -> units.equals(firstUnit)).count();
         long count2 = Arrays.stream(baseUnits).filter(units -> units.equals(secondUnit)).count();
 
         if(count1 != 1 || count2 != 1)
             throw new MeasurementServiceException(HttpStatus.BAD_REQUEST
                     ,firstUnit+" , "+ secondUnit +" are incompatible unit types");
+    }
+
+    private void checkMeasurementExists(String measurement){
+        BaseUnits[] baseUnits = measurements.get(measurement.toLowerCase());
+
+        if(baseUnits == null)
+            throw new MeasurementServiceException(HttpStatus.NOT_FOUND,
+                    measurement+" is not found in the measurements");
     }
 }

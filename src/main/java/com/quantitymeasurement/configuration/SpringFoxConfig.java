@@ -28,9 +28,6 @@ public class SpringFoxConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("Quantity Measurement API")
                 .description("API for converting units")
-                .contact("madhu.vayya@gmail.com")
-                .license("JavaInUse License")
-                .licenseUrl("javainuse@gmail.com")
                 .version("1.0")
                 .build();
     }

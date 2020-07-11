@@ -51,7 +51,7 @@ public class MeasurementService {
         if(measurement.toLowerCase().equals("temperature")){
              return round(this.temperatureConversion(firstUnit, secondUnit, firstUnitValue) * 1000.0) / 1000.0;
         }
-        if(firstUnit.equals(BaseUnits.INCH))
+        if(secondUnit.equals(BaseUnits.INCH))
             return round(firstUnitValue * firstUnit.value * 1000.0 ) / 1000.0;
         return round(firstUnitValue * ( firstUnit.value / secondUnit.value) * 1000.0 ) / 1000.0 ;
     }
